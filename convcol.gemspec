@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-	s.name        = 'concol'
+	s.name        = 'convcol'
 	s.version     = '0.0.1'
 	s.executables << 'convcol'
 	s.date        = '2012-09-06'

@@ -1,67 +1,52 @@
-#!/usr/bin/env ruby
+module Convcol
 
-require 'optparse'
-require 'pp'
+	class RGB
 
-# This hash will hold all of the options
-# parsed from the command-line by
-# OptionParser.
-options = {}
+		def self.to_hex(red,green=nil,blue=nil)
+			r = nil
+			g = nil
+			b = nil
 
-optparse = OptionParser.new do|opts|
-	# TODO: Put command-line options here
+			if green != nil and blue != nil
+				r = red
+				g = green
+				b = blue
+			elsif red.kind_of?(String)
+				rgb = red.split(",")
+				r = rgb[0]
+				g = rgb[1]
+				b = rgb[2]
+			elsif red.kind_of?(Array)
+				r = red[0]
+				g = red[1]
+				b = red[2]
+			end
 
-	# This displays the help screen, all programs are
-	# assumed to have this option.
-	opts.on( '-h', '--help', 'Display this screen' ) do
-		puts opts
-		exit
+			return "##{r.to_i.to_s(16)}#{g.to_i.to_s(16)}#{b.to_i.to_s(16)}"
+		end
+
 	end
 
-	options[:hex] = nil
-	opts.on( '-h', '--hex rrggbb', "Mandatory argument" ) do|f|
-		options[:hex] = f.each_char.to_a.reverse.join
+	class Hex
+
+		def self.to_rgb(hex_str)
+			hex_str_rev = hex_str.sub("#","").each_char.to_a.reverse.join
+			if hex_str_rev.size == 3
+				hex_str_rev = hex_str_rev[0] + hex_str_rev[0] + hex_str_rev[1] + hex_str_rev[1] + hex_str_rev[2] + hex_str_rev[2]
+			elsif hex_str_rev.size != 6
+				return nil
+			end
+
+			hex = hex_str_rev.to_s.hex
+			rgb = {}
+			%w(r g b).inject(hex) {|a,i| rest, rgb[i] = a.divmod 256; rest}
+			red = rgb["r"].to_s
+			green = rgb["g"].to_s
+			blue = rgb["b"].to_s
+
+			return "#{red},#{green},#{blue}"
+		end
+
 	end
 
-	options[:rgb] = nil
-	opts.on( '-r', '--rgb r,g,b', Array, "List of parameters" ) do|l|
-		options[:rgb] = l
-	end
-
-end
-
-# Parse the command-line. Remember there are two forms
-# of the parse method. The 'parse' method simply parses
-# ARGV, while the 'parse!' method parses ARGV and removes
-# any options found there, as well as any parameters for
-# the options. What's left is the list of files to resize.
-optparse.parse!
-
-pp "Options:", options
-pp "ARGV:", ARGV
-
-red = 0
-green = 0
-blue = 0
-
-if options[:hex]
-	hex = options[:hex].to_s.hex
-	rgb = {}
-	%w(r g b).inject(hex) {|a,i| rest, rgb[i] = a.divmod 256; rest}
-	red = rgb["r"].to_s
-	green = rgb["g"].to_s
-	blue = rgb["b"].to_s
-
-elsif options[:rgb]
-	red = options[:rgb][0]
-	green = options[:rgb][1]
-	blue = options[:rgb][2]
-end
-
-if ARGV.include?("rgb")
-	puts "#{red},#{green},#{blue}"
-end
-
-if ARGV.include?("hex")
-	puts "##{red.to_i.to_s(16)}#{green.to_i.to_s(16)}#{blue.to_i.to_s(16)}"
 end
