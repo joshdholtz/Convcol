@@ -22,7 +22,23 @@ module Convcol
 				b = red[2]
 			end
 
-			return "##{r.to_i.to_s(16)}#{g.to_i.to_s(16)}#{b.to_i.to_s(16)}"
+			r = r.to_i.to_s(16)
+			g = g.to_i.to_s(16)
+			b = b.to_i.to_s(16)
+
+			if r.size < 2
+				r = "0" + r
+			end
+
+			if g.size < 2
+				g = "0" + g
+			end
+
+			if b.size < 2
+				b = "0" + b
+			end
+
+			return "##{r}#{g}#{b}"
 		end
 
 	end
