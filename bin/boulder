@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'pp'
+require 'boulder'
+
+Boulder::Command.run(ARGV)

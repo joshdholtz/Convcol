@@ -1,0 +1,5 @@
+platform :android, '4.2'
+boulder :git => 'http://github.com', :commit => '1234'
+boulder :git => 'http://github.com'
+boulder 'protocol'
+boulder 'sweettooth', '> 2.0.0'
